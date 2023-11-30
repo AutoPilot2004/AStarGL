@@ -14,37 +14,37 @@ namespace engine
 		m_d->removeListener<MouseMotionEvent>(DMOUSEPOS_ID);
 	}
 
-	bool Input::isKeyPressed(uint16_t keyCode)
+	bool Input::isKeyPressed(uint16_t keyCode) const
 	{
 		ASSERT_KEY(keyCode)
 		return m_keyPressed.at(keyCode);
 	}
 
-	bool Input::isKeyReleased(uint16_t keyCode)
+	bool Input::isKeyReleased(uint16_t keyCode) const
 	{
 		ASSERT_KEY(keyCode)
 		return m_keyReleased.at(keyCode);
 	}
 
-	bool Input::isKeyDown(uint16_t keyCode)
+	bool Input::isKeyDown(uint16_t keyCode) const
 	{
 		ASSERT_KEY(keyCode)
 		return m_keyDown.at(keyCode);
 	}
 
-	bool Input::isMouseButtonPressed(uint8_t mouseBtnCode)
+	bool Input::isMouseButtonPressed(uint8_t mouseBtnCode) const
 	{
 		ASSERT_MOUSE_BUTTON(mouseBtnCode)
 		return m_mouseBtnPressed.at(mouseBtnCode);
 	}
 
-	bool Input::isMouseButtonReleased(uint8_t mouseBtnCode)
+	bool Input::isMouseButtonReleased(uint8_t mouseBtnCode) const
 	{
 		ASSERT_MOUSE_BUTTON(mouseBtnCode)
 		return m_mouseBtnReleased.at(mouseBtnCode);
 	}
 
-	bool Input::isMouseButtonDown(uint8_t mouseBtnCode)
+	bool Input::isMouseButtonDown(uint8_t mouseBtnCode) const
 	{
 		ASSERT_MOUSE_BUTTON(mouseBtnCode)
 		return m_mouseBtnDown.at(mouseBtnCode);

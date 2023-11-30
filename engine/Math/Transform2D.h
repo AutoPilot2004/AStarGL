@@ -21,6 +21,10 @@ namespace engine
 		inline void setRotation(float rotationInDegrees)          { this->rotation = rotationInDegrees;  m_rotationDirty = true; }
 		inline void setScale(const glm::vec2& scale)              { this->scale = scale;                 m_scaleDirty = true; }
 
+		inline void offsetTranslation(const glm::vec3& translation) { this->translation += translation;     m_translationDirty = true; }
+		inline void offsetRotation(float rotationInDegrees)         { this->rotation += rotationInDegrees;  m_rotationDirty = true; }
+		inline void offsetScale(const glm::vec2& scale)             { this->scale += scale;                 m_scaleDirty = true; }
+
 		//Getters
 		inline const glm::vec3& getTranslation()      const { return translation; }
 		inline float            getRotation()         const { return rotation; }

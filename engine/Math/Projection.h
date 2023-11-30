@@ -12,7 +12,7 @@ namespace engine
 	class Projection
 	{
 	public:
-		Projection(uint16_t width, uint16_t height, float fov, ProjectionType projectionType);
+		Projection(uint16_t width, uint16_t height, ProjectionType projectionType);
 
 		bool needsUpdate() const { return m_dirty; }
 
@@ -20,6 +20,7 @@ namespace engine
 		inline void setWidth(uint16_t width)                { m_width = width;          m_dirty = true; }
 		inline void setHeight(uint16_t height)              { m_height = height;        m_dirty = true; }
 		inline void setFOV(float fov)                       { m_fov = fov;              m_dirty = true; }
+		inline void offsetFOV(float fov)                    { m_fov += fov;             m_dirty = true; }
 		inline void setProjectionType(ProjectionType pType) { m_projectionType = pType; m_dirty = true; }
 
 		//Getters
@@ -34,7 +35,7 @@ namespace engine
 
 		uint16_t m_width;
 		uint16_t m_height;
-		float m_fov;
+		float m_fov = 45.0f;
 		ProjectionType m_projectionType = ProjectionType::ORTHOGRAPHIC;
 
 		bool m_dirty = true;

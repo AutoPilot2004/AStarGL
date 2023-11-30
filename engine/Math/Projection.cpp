@@ -4,8 +4,8 @@
 
 namespace engine
 {
-	Projection::Projection(uint16_t width, uint16_t height, float fov, ProjectionType projectionType)
-		: m_width(width), m_height(height), m_fov(fov), m_projectionType(projectionType)
+	Projection::Projection(uint16_t width, uint16_t height, ProjectionType projectionType)
+		: m_width(width), m_height(height), m_projectionType(projectionType)
 	{}
 
 	void Projection::updateProjectionMatrix()

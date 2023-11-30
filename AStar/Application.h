@@ -1,32 +1,12 @@
 #pragma once
-#include <engine/Scene/Camera2D.h>
-#include <engine/Window/Window.h>
+#include <engine/Application.h>
 
-#include "Board.h"
 
-namespace engine
-{
-	class Renderer2D;
-}
-
-class Application
+class Application : public engine::Application
 {
 public:
-	Application();
-
-	void run();
-
-private:
-	void init();
-	void mainLoop();
-
-	void processInput(double dT);
-	void update(double dT);
-	void render(engine::Renderer2D& renderer);
+	void init() override;
+	void mainLoop() override;
 
 private:
-	engine::Window m_window;
-	engine::Camera2D m_camera2D;
-
-	Board m_board;
 };

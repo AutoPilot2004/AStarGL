@@ -9,13 +9,16 @@ namespace engine
 	class Shader
 	{
 	public:
+		Shader() = default;
+		Shader(const std::string& vertFilePath, const std::string& fragFilePath);
+
 		void create(const std::string& vertFilePath, const std::string& fragFilePath);
 
 		       void bind() const;
 		static void bind(GLuint program);
 		static void unbind();
 
-		void setFloat(const std::string& name, float value) const;
+		void setFloat(const std::string& name, float value)          const;
 		void setVec3(const std::string& name, const glm::vec3& vec3) const;
 		void setMat4(const std::string& name, const glm::mat4& mat4) const;
 

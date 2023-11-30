@@ -73,7 +73,12 @@ namespace engine
 
 		setContext();
 
+		int width, height;
+		glfwGetWindowSize(m_handle, &width, &height);
+		m_settings.width = width;
+		m_settings.height = height;
 		RenderCommand::setViewPort(0, 0, m_settings.width, m_settings.height);
+		RenderCommand::setWindowSize(m_settings.width, m_settings.height);
 	}
 
 	void Window::setContext()

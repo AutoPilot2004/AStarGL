@@ -10,7 +10,7 @@ namespace engine
 		Transform2DBasic transform;
 		Texture texture;
 		glm::vec4 color{ 1.0f };
-		Shader* shader = nullptr;
+		const Shader* shader = nullptr;
 
 		//TODO: IMPLEMENT TEXTURE2D
 		//Texture2D texture;

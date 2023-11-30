@@ -80,6 +80,12 @@ namespace
 
 namespace engine
 {
+
+	Shader::Shader(const std::string& vertFilePath, const std::string& fragFilePath)
+	{
+		create(vertFilePath, fragFilePath);
+	}
+
 	void Shader::create(const std::string& vertFilePath, const std::string& fragFilePath)
 	{
 		GLuint vertID = createShader(vertFilePath, GL_VERTEX_SHADER);

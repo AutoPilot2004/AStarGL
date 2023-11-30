@@ -14,13 +14,13 @@ namespace engine
 		Input() = default;
 		~Input();
 
-		bool isKeyPressed(uint16_t keyCode);
-		bool isKeyReleased(uint16_t keyCode);
-		bool isKeyDown(uint16_t keyCode);
+		bool isKeyPressed(uint16_t keyCode)  const;
+		bool isKeyReleased(uint16_t keyCode) const;
+		bool isKeyDown(uint16_t keyCode)     const;
 
-		bool isMouseButtonPressed(uint8_t mouseBtnCode);
-		bool isMouseButtonReleased(uint8_t mouseBtnCode);
-		bool isMouseButtonDown(uint8_t mouseBtnCode);
+		bool isMouseButtonPressed(uint8_t mouseBtnCode)  const;
+		bool isMouseButtonReleased(uint8_t mouseBtnCode) const;
+		bool isMouseButtonDown(uint8_t mouseBtnCode)     const;
 
 		//Getters
 		inline const glm::vec2& getMousePos() const { return m_mousePos; }

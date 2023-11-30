@@ -69,8 +69,7 @@ namespace engine
 
 		engine::WindowResizeEvent winResizeEvent = { Event{}, { width, height } };
 
-		//TODO: CHECK IF THIS CAN BE REMOVED SINCE FRAMEBUFFER RESIZE CALLBACK IS FIRED FIRST
-		RenderCommand::setViewPort(0, 0, width, height);
+		RenderCommand::setWindowSize(width, height);
 
 		win->eventManager.dispatcher.onNotify(winResizeEvent);
 	}

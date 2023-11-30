@@ -6,6 +6,8 @@
 
 namespace engine
 {
+	struct SceneContext;
+
 	class Renderer2D;
 }
 
@@ -14,7 +16,7 @@ class Board
 public:
 	void init(uint32_t width, uint32_t height, float rectScale = 1.0f);
 
-	void render(engine::Renderer2D& renderer);
+	void render(const engine::SceneContext& sceneContext);
 
 private:
 	uint32_t m_width;

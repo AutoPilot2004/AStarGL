@@ -16,5 +16,12 @@ public:
 	void onRender()          override;
 
 private:
+	void updateCamera(double dT);
+	void updateChoice();
+	void updateBoard();
+
+private:
 	Board m_board;
+
+	glm::vec4 m_currentColor;
 };

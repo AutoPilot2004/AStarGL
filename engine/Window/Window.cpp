@@ -79,6 +79,10 @@ namespace engine
 		m_settings.height = height;
 		RenderCommand::setViewPort(0, 0, m_settings.width, m_settings.height);
 		RenderCommand::setWindowSize(m_settings.width, m_settings.height);
+
+		//TODO: MOVE FROM HERE
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	void Window::setContext()

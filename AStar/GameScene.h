@@ -19,6 +19,7 @@ private:
 	void initBoard();
 
 	void updateCamera(double dT);
+	void updateCameraTranslation(float xy, float bound, int8_t mul, double speed, bool xAxis);
 	void updateChoice();
 	void updateBoard();
 	void changeState();

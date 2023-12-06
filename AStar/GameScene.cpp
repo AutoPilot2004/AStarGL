@@ -74,16 +74,32 @@ void GameScene::onExit()
 
 void GameScene::updateCamera(double dT)
 {
-	     if (sceneContext.input->isKeyDown(KEY_A) && getBoundCamera().transform.getTranslation().x >= -0.5f)                      getBoundCamera().transform.offsetTranslation({ -MOVE_SPEED * dT,0.0f, 0.0f });
-	else if (sceneContext.input->isKeyDown(KEY_D) && getBoundCamera().transform.getTranslation().x <= (BOARD_WIDTH  - 1) + 0.5f)  getBoundCamera().transform.offsetTranslation({ MOVE_SPEED * dT,0.0f, 0.0f });
-	     if (sceneContext.input->isKeyDown(KEY_W) && getBoundCamera().transform.getTranslation().y <= (BOARD_HEIGHT - 1) + 0.5f)  getBoundCamera().transform.offsetTranslation({  0.00f,  MOVE_SPEED * dT, 0.0f });
-	else if (sceneContext.input->isKeyDown(KEY_S) && getBoundCamera().transform.getTranslation().y >= -0.5f)                      getBoundCamera().transform.offsetTranslation({  0.00f, -MOVE_SPEED * dT, 0.0f });
+	const double moveSpeed   = MOVE_SPEED   * dT;
+	const double scrollSpeed = SCROLL_SPEED * dT;
 
-		 if (!sceneContext.input->isMouseScrolled()) return;
+	engine::Transform2DAdvanced& cTransform = getBoundCamera().transform;
 
-		 if ((sceneContext.input->getMouseScroll() > 0 && getBoundCamera().projection.getFOV() > MAX_ZOOM_IN) ||
-			 (sceneContext.input->getMouseScroll() < 0 && getBoundCamera().projection.getFOV() < MAX_ZOOM_OUT))
-			 getBoundCamera().projection.offsetFOV(SCROLL_SPEED * dT * -sceneContext.input->getMouseScroll());
+	     if (sceneContext.input->isKeyDown(KEY_A)) updateCameraTranslation(cTransform.getTranslation().x, -0.5f, 1, -moveSpeed, true);
+	else if (sceneContext.input->isKeyDown(KEY_D)) updateCameraTranslation(cTransform.getTranslation().x, (BOARD_WIDTH - 1) + 0.5f, -1, moveSpeed, true);
+
+	     if (sceneContext.input->isKeyDown(KEY_W)) updateCameraTranslation(cTransform.getTranslation().y, (BOARD_HEIGHT - 1) + 0.5f, -1, moveSpeed, false);
+	else if (sceneContext.input->isKeyDown(KEY_S)) updateCameraTranslation(cTransform.getTranslation().y, -0.5f,  1, -moveSpeed, false);
+
+	if (!sceneContext.input->isMouseScrolled()) return;
+
+	if ((sceneContext.input->getMouseScroll() > 0 && getBoundCamera().projection.getFOV() > MAX_ZOOM_IN) ||
+		(sceneContext.input->getMouseScroll() < 0 && getBoundCamera().projection.getFOV() < MAX_ZOOM_OUT))
+		getBoundCamera().projection.offsetFOV(scrollSpeed * -sceneContext.input->getMouseScroll());
+}
+
+void GameScene::updateCameraTranslation(float xy, float bound, int8_t mul, double speed, bool xAxis)
+{
+	if (xy * mul > bound * mul) {
+		if ((xy + speed) * mul <= bound * mul)
+			getBoundCamera().transform.setTranslation(xAxis ? glm::vec3{ bound, getBoundCamera().transform.getTranslation().y, 0.0f} : glm::vec3{ getBoundCamera().transform.getTranslation().x, bound, 0.0f });
+		else
+			getBoundCamera().transform.offsetTranslation({ speed * xAxis, speed * (!xAxis), 0.0f});
+	}
 }
 
 void GameScene::updateChoice()

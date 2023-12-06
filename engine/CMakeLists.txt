@@ -7,5 +7,5 @@ target_include_directories(engine PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Stb_INCLU
 target_link_libraries(engine PUBLIC glfw GLEW::GLEW glm::glm spdlog::spdlog)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET engine PROPERTY CXX_STANDARD 20)
+  set_property(TARGET engine PROPERTY CXX_STANDARD 23)
 endif()

@@ -1,10 +1,15 @@
 #pragma once
 #include <vector>
 #include <concepts>
+#include <utility>
 
 #include "Window/Window.h"
 #include "Scene/Scene.h"
 #include "Contexts/Contexts.h"
+
+//#include "../AStar/GameScene.h"
+
+//TODO: LOGGING AND ASSERTION EVERYWHERE
 
 namespace engine
 {
@@ -22,20 +27,35 @@ namespace engine
 			m_applicationContext = std::make_unique<ApplicationContext>();
 		}
 
-		template<typename SceneName>
+		template<typename SceneName, typename... Args>
 		requires std::derived_from<SceneName, Scene>
-		[[nodiscard]] SceneName& getScene()
+		void addScene(Args&&... args)
 		{
-			static bool     added = false;
-			static uint16_t idx;
+			//TODO: A PROPER SCENE MANAGER
+
+			static bool added = false;
 
 			if (!added) {
-				m_scenes.emplace_back(std::make_unique<SceneName>(SceneContext{ .dispatcher = &window.eventManager.dispatcher, .input = &window.eventManager.input, .textureManager = &m_applicationContext->textureManager, .renderer2D = &m_applicationContext->renderer2D }));
-				idx = m_scenes.size() - 1;
+				getScene<SceneName>();
+				m_scenes.emplace_back(std::make_unique<SceneName>(SceneContext{ .dispatcher = &window.eventManager.dispatcher, .input = &window.eventManager.input, .textureManager = &m_applicationContext->textureManager, .renderer2D = &m_applicationContext->renderer2D }, std::forward<Args>(args)...));
 				added = true;
 			}
+		}
 
-			return *static_cast<SceneName*>(m_scenes.at(idx).get());
+		template<typename SceneName>
+		requires std::derived_from<SceneName, Scene>
+		[[nodiscard]] SceneName* getScene() const
+		{
+			static size_t idx = m_scenes.size();
+
+			static bool first = true;
+
+			if (first) {
+				first = false;
+				return nullptr;
+			}
+
+			return static_cast<SceneName*>(m_scenes.at(idx).get());
 		}
 
 		template<typename SceneName>
@@ -45,12 +65,12 @@ namespace engine
 			if (m_currentScene)
 				m_currentScene->onExit();
 
-			m_currentScene = &getScene<SceneName>();
+			m_currentScene = getScene<SceneName>();
 
 			m_currentScene->onEntry();
 		}
 
-		inline Scene* getBoundScene() { return m_currentScene; }
+		inline Scene* getBoundScene() const { return m_currentScene; }
 
 	protected:
 		Window window;
@@ -59,6 +79,6 @@ namespace engine
 		std::unique_ptr<ApplicationContext> m_applicationContext;
 
 		std::vector<std::unique_ptr<Scene>> m_scenes;
-		Scene* m_currentScene = nullptr;
+		Scene*                              m_currentScene = nullptr;
 	};
 }

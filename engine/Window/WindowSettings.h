@@ -21,8 +21,8 @@ namespace engine
 	struct WindowSettings
 	{
 		std::string title = "Window";
-		uint16_t width = 1920;
-		uint16_t height = 1080;
+		uint16_t width    = 1920;
+		uint16_t height   = 1080;
 		WindowFlags flags = WindowFlags::NONE;
 	};
 }

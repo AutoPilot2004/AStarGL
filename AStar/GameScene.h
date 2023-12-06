@@ -16,12 +16,16 @@ public:
 	void onRender()          override;
 
 private:
+	void initBoard();
+
 	void updateCamera(double dT);
 	void updateChoice();
 	void updateBoard();
+	void changeState();
 
 private:
 	Board m_board;
+	bool m_disableMouseInput = false;
 
 	glm::vec4 m_currentColor;
 };

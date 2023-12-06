@@ -18,6 +18,7 @@ void Application::init()
 	window.create();
 	createApplicationContext();
 
+	addScene<GameScene>();
 	bindScene<GameScene>();
 }
 

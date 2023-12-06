@@ -1,9 +1,11 @@
 #pragma once
-#include <engine/Shapes/Shapes.h>
-
 #include <vector>
 #include <glm/glm.hpp>
 #include <unordered_set>
+
+#include <engine/Shapes/Shapes.h>
+
+#include "AStarAlgo.h"
 
 namespace engine
 {
@@ -23,6 +25,8 @@ public:
 	void unsetCell(uint32_t x, uint32_t y);
 	void hoverCell(uint32_t x, uint32_t y, const glm::vec4& color);
 
+	bool computePath(const glm::vec4& color);
+
 	void render(const engine::SceneContext& sceneContext);
 
 	bool isCellEmpty(uint32_t x, uint32_t y);
@@ -40,8 +44,8 @@ private:
 
 	glm::vec4 m_color;
 
-	glm::vec2 m_startCell;
-	glm::vec2 m_endCell;
+	glm::ivec2 m_startCell;
+	glm::ivec2 m_endCell;
 
 	bool m_startCellExists = false;
 	bool m_endCellExists   = false;
@@ -49,4 +53,6 @@ private:
 	engine::Rect                 m_rect;
 	std::vector<glm::vec4>       m_cellColors;
 	std::unordered_set<uint32_t> m_filledCellIdx;
+
+	AStarAlgo m_astar;
 };

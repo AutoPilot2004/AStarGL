@@ -3,18 +3,25 @@
 #include <engine/Renderer/RenderCommand.h>
 #include <engine/Defaults.h>
 
-#define BOARD_WIDTH  15
-#define BOARD_HEIGHT 10
+#define BOARD_WIDTH  25
+#define BOARD_HEIGHT 50
+
+#define MOVE_SPEED   0.05f
+#define SCROLL_SPEED 0.05f
+
+#define MAX_ZOOM_IN  5.0f
+#define MAX_ZOOM_OUT 40.0f
 
 #define BC_RED   0.2f
 #define BC_GREEN 0.2f
 #define BC_BLUE  0.2f
 #define BC_ALPHA 1.0f
 
-#define BOARD_COLOR glm::vec4{1.0f, 0.0f, 1.0f, 1.0f}
+#define BOARD_COLOR glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}
 #define START_COLOR glm::vec4{0.0f, 1.0f, 0.0f, 1.0f}
 #define END_COLOR   glm::vec4{1.0f, 0.0f, 0.0f, 1.0f}
 #define BLOCK_COLOR glm::vec4{0.5f, 0.5f, 0.5f, 1.0f}
+#define PATH_COLOR  glm::vec4{0.3f, 0.5f, 0.6f, 1.0f}
 
 namespace
 {
@@ -50,9 +57,14 @@ void GameScene::onEntry()
 	getBoundCamera().projection.setFOV(10.0f);
 	getBoundCamera().transform.setTranslation({ (BOARD_WIDTH - 1) / 2.0f, (BOARD_HEIGHT - 1) / 2.0f, 0.0f });
 
-	m_board.init(BOARD_WIDTH, BOARD_HEIGHT, BOARD_COLOR);
+	initBoard();
 
 	m_currentColor = BLOCK_COLOR;
+}
+
+void GameScene::initBoard()
+{
+	m_board.init(BOARD_WIDTH, BOARD_HEIGHT, BOARD_COLOR);
 }
 
 void GameScene::onExit()
@@ -62,10 +74,16 @@ void GameScene::onExit()
 
 void GameScene::updateCamera(double dT)
 {
-	     if (sceneContext.input->isKeyDown(KEY_A)) getBoundCamera().transform.offsetTranslation({ -0.03f * dT,  0.0f      , 0.0f });
-	else if (sceneContext.input->isKeyDown(KEY_D)) getBoundCamera().transform.offsetTranslation({  0.03f * dT,  0.0f      , 0.0f });
-	else if (sceneContext.input->isKeyDown(KEY_W)) getBoundCamera().transform.offsetTranslation({  0.00f     ,  0.03f * dT, 0.0f });
-	else if (sceneContext.input->isKeyDown(KEY_S)) getBoundCamera().transform.offsetTranslation({  0.00f     , -0.03f * dT, 0.0f });
+	     if (sceneContext.input->isKeyDown(KEY_A) && getBoundCamera().transform.getTranslation().x >= -0.5f)                      getBoundCamera().transform.offsetTranslation({ -MOVE_SPEED * dT,0.0f, 0.0f });
+	else if (sceneContext.input->isKeyDown(KEY_D) && getBoundCamera().transform.getTranslation().x <= (BOARD_WIDTH  - 1) + 0.5f)  getBoundCamera().transform.offsetTranslation({ MOVE_SPEED * dT,0.0f, 0.0f });
+	     if (sceneContext.input->isKeyDown(KEY_W) && getBoundCamera().transform.getTranslation().y <= (BOARD_HEIGHT - 1) + 0.5f)  getBoundCamera().transform.offsetTranslation({  0.00f,  MOVE_SPEED * dT, 0.0f });
+	else if (sceneContext.input->isKeyDown(KEY_S) && getBoundCamera().transform.getTranslation().y >= -0.5f)                      getBoundCamera().transform.offsetTranslation({  0.00f, -MOVE_SPEED * dT, 0.0f });
+
+		 if (!sceneContext.input->isMouseScrolled()) return;
+
+		 if ((sceneContext.input->getMouseScroll() > 0 && getBoundCamera().projection.getFOV() > MAX_ZOOM_IN) ||
+			 (sceneContext.input->getMouseScroll() < 0 && getBoundCamera().projection.getFOV() < MAX_ZOOM_OUT))
+			 getBoundCamera().projection.offsetFOV(SCROLL_SPEED * dT * -sceneContext.input->getMouseScroll());
 }
 
 void GameScene::updateChoice()
@@ -82,7 +100,7 @@ void GameScene::updateBoard()
 	if (m_board.isCellEmpty(lastMousePos.x, lastMousePos.y)) m_board.unsetCell(lastMousePos.x, lastMousePos.y);
 
 	glm::vec2 worldMousePos = screenToWorldSpace(sceneContext.input->getMousePos(), engine::RenderCommand::getWindowSize(), getBoundCamera().getViewProjectionMatrix()) + 0.5f;
-	if (!(worldMousePos.x > 0.0f && worldMousePos.x < BOARD_WIDTH && worldMousePos.y > 0.0f && worldMousePos.y < BOARD_HEIGHT)) return;
+	if (!(worldMousePos.x > 0.0f && worldMousePos.x < BOARD_WIDTH && worldMousePos.y > 0.0f && worldMousePos.y < BOARD_HEIGHT && !m_disableMouseInput)) return;
 
 	if (sceneContext.input->isMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		m_board.unsetCell(worldMousePos.x, worldMousePos.y);
@@ -104,11 +122,27 @@ void GameScene::updateBoard()
 	lastMousePos = worldMousePos;
 }
 
+void GameScene::changeState()
+{
+	if (sceneContext.input->isKeyPressed(KEY_SPACE)) {
+		if (m_disableMouseInput) {
+			initBoard();
+			m_disableMouseInput = false;
+			return;
+		}
+
+		if (m_board.computePath(PATH_COLOR)) {
+			m_disableMouseInput = true;
+		}
+	}
+}
+
 void GameScene::onUpdate(double dT)
 {
 	updateCamera(dT);
 	updateChoice();
 	updateBoard();
+	changeState();
 }
 
 void GameScene::onRender()

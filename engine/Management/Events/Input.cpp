@@ -12,6 +12,7 @@ namespace engine
 		m_d->removeListener<KeyEvent>(DKEY_ID);
 		m_d->removeListener<MouseBtnEvent>(DMOUSEBTN_ID);
 		m_d->removeListener<MouseMotionEvent>(DMOUSEPOS_ID);
+		m_d->removeListener<MouseScrollEvent>(DMOUSESCROLL_ID);
 	}
 
 	bool Input::isKeyPressed(uint16_t keyCode) const
@@ -50,13 +51,19 @@ namespace engine
 		return m_mouseBtnDown.at(mouseBtnCode);
 	}
 
+	bool Input::isMouseScrolled() const
+	{
+		return m_mouseScroll != 0;
+	}
+
 	void Input::setupCallbacks(Dispatcher& d)
 	{
 		m_d = &d;
 
-		DKEY_ID      = d.addListener<KeyEvent>(this, &Input::keyCallback);
-		DMOUSEBTN_ID = d.addListener<MouseBtnEvent>(this, &Input::mouseBtnCallback);
-		DMOUSEPOS_ID = d.addListener<MouseMotionEvent>(this, &Input::mousePosCallback);
+		DKEY_ID         = d.addListener<KeyEvent>(this, &Input::keyCallback);
+		DMOUSEBTN_ID    = d.addListener<MouseBtnEvent>(this, &Input::mouseBtnCallback);
+		DMOUSEPOS_ID    = d.addListener<MouseMotionEvent>(this, &Input::mousePosCallback);
+		DMOUSESCROLL_ID = d.addListener<MouseScrollEvent>(this, &Input::mouseScrollCallback);
 	}
 
 	void Input::keyCallback(const KeyEvent& e)
@@ -86,6 +93,11 @@ namespace engine
 		m_mousePos = e.position;
 	}
 
+	void Input::mouseScrollCallback(const MouseScrollEvent& e)
+	{
+		m_mouseScroll = e.offset;
+	}
+
 	void Input::update()
 	{
 		memset(&m_keyPressed.at(0), false, m_keyPressed.size());
@@ -93,5 +105,7 @@ namespace engine
 
 		memset(&m_mouseBtnPressed.at(0), false, m_mouseBtnPressed.size());
 		memset(&m_mouseBtnReleased.at(0), false, m_mouseBtnReleased.size());
+
+		m_mouseScroll = 0;
 	}
 }

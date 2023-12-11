@@ -43,8 +43,8 @@ namespace
 	}
 }
 
-GameScene::GameScene(const engine::SceneContext& sceneContext)
-	: engine::Scene(sceneContext)
+GameScene::GameScene(const engine::SceneContext& sceneContext, const std::function<void()>& exitCallback)
+	: engine::Scene(sceneContext), m_exitCallback(exitCallback)
 {
 	addCamera("MainCamera");
 }
@@ -79,11 +79,11 @@ void GameScene::updateCamera(double dT)
 
 	engine::Transform2DAdvanced& cTransform = getBoundCamera().transform;
 
-	     if (sceneContext.input->isKeyDown(KEY_A)) updateCameraTranslation(cTransform.getTranslation().x, -0.5f, 1, -moveSpeed, true);
-	else if (sceneContext.input->isKeyDown(KEY_D)) updateCameraTranslation(cTransform.getTranslation().x, (BOARD_WIDTH - 1) + 0.5f, -1, moveSpeed, true);
+	     if (sceneContext.input->isKeyDown(KEY_A)) updateCameraTranslation(cTransform.getTranslation().x,                    -0.5f,  0, -moveSpeed, true);
+	else if (sceneContext.input->isKeyDown(KEY_D)) updateCameraTranslation(cTransform.getTranslation().x, (BOARD_WIDTH - 1) + 0.5f,  1,  moveSpeed, true);
 
-	     if (sceneContext.input->isKeyDown(KEY_W)) updateCameraTranslation(cTransform.getTranslation().y, (BOARD_HEIGHT - 1) + 0.5f, -1, moveSpeed, false);
-	else if (sceneContext.input->isKeyDown(KEY_S)) updateCameraTranslation(cTransform.getTranslation().y, -0.5f,  1, -moveSpeed, false);
+	     if (sceneContext.input->isKeyDown(KEY_W)) updateCameraTranslation(cTransform.getTranslation().y, (BOARD_HEIGHT - 1) + 0.5f, 1,  moveSpeed, false);
+	else if (sceneContext.input->isKeyDown(KEY_S)) updateCameraTranslation(cTransform.getTranslation().y,                     -0.5f, 0, -moveSpeed, false);
 
 	if (!sceneContext.input->isMouseScrolled()) return;
 
@@ -92,13 +92,13 @@ void GameScene::updateCamera(double dT)
 		getBoundCamera().projection.offsetFOV(scrollSpeed * -sceneContext.input->getMouseScroll());
 }
 
-void GameScene::updateCameraTranslation(float xy, float bound, int8_t mul, double speed, bool xAxis)
+void GameScene::updateCameraTranslation(float xy, float bound, bool inv, double distance, bool xAxis)
 {
-	if (xy * mul > bound * mul) {
-		if ((xy + speed) * mul <= bound * mul)
+	if (inv - (xy > bound)) {
+		if (inv - ((xy + distance) <= bound))
 			getBoundCamera().transform.setTranslation(xAxis ? glm::vec3{ bound, getBoundCamera().transform.getTranslation().y, 0.0f} : glm::vec3{ getBoundCamera().transform.getTranslation().x, bound, 0.0f });
 		else
-			getBoundCamera().transform.offsetTranslation({ speed * xAxis, speed * (!xAxis), 0.0f});
+			getBoundCamera().transform.offsetTranslation({ distance * xAxis, distance * (!xAxis), 0.0f});
 	}
 }
 
@@ -151,6 +151,8 @@ void GameScene::changeState()
 			m_disableMouseInput = true;
 		}
 	}
+
+	if (sceneContext.input->isKeyPressed(KEY_ESCAPE)) m_exitCallback();
 }
 
 void GameScene::onUpdate(double dT)

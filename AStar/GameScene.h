@@ -7,7 +7,7 @@
 class GameScene : public engine::Scene
 {
 public:
-	GameScene(const engine::SceneContext& sceneContext);
+	GameScene(const engine::SceneContext& sceneContext, const std::function<void()>& exitCallback);
 
 	void onEntry()           override;
 	void onExit()            override;
@@ -19,7 +19,7 @@ private:
 	void initBoard();
 
 	void updateCamera(double dT);
-	void updateCameraTranslation(float xy, float bound, int8_t mul, double speed, bool xAxis);
+	void updateCameraTranslation(float xy, float bound, bool inv, double distance, bool xAxis);
 	void updateChoice();
 	void updateBoard();
 	void changeState();
@@ -29,4 +29,6 @@ private:
 	bool m_disableMouseInput = false;
 
 	glm::vec4 m_currentColor;
+
+	std::function<void()> m_exitCallback;
 };

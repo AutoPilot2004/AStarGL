@@ -1,12 +1,19 @@
 #include "Application.h"
 #include <chrono>
 
+#include <engine/Renderer/RenderCommand.h>
+
 #include "FadeScene.h"
 #include "GameScene.h"
 #include "MenuScene.h"
 
 #define SCREEN_WIDTH  1920
 #define SCREEN_HEIGHT 1080
+
+#define BC_RED   0.2f
+#define BC_GREEN 0.2f
+#define BC_BLUE  0.2f
+#define BC_ALPHA 1.0f
 
 void Application::init()
 {
@@ -21,11 +28,25 @@ void Application::init()
 	window.create();
 	createApplicationContext();
 
-	addScene<FadeScene>([]() {std::cout << "FADE IN COMPLETE\n"; }, [&]() {std::cout << "FADE OUT COMPLETE\n"; bindScene<MenuScene>(); m_fadeScene->fadeIn(); });
+	engine::RenderCommand::setClearColor(BC_RED, BC_GREEN, BC_BLUE, BC_ALPHA);
+
+	addScene<FadeScene>([&]() { changeScene(m_nextSceneID); m_fadeScene->fadeIn(); });
 	m_fadeScene = getScene<FadeScene>();
-	addScene<MenuScene>();
-	addScene<GameScene>([&]() {std::cout << "EXIT\n"; m_fadeScene->fadeOut(); });
-	bindScene<GameScene>();
+	addScene<MenuScene>([&](SceneID nextScene) { m_nextSceneID = nextScene; m_fadeScene->fadeOut(); });
+	addScene<GameScene>([&](SceneID nextScene) { m_nextSceneID = nextScene; m_fadeScene->fadeOut(); });
+	bindScene<MenuScene>();
+}
+
+void Application::changeScene(SceneID scene)
+{
+	switch (scene) {
+	case SceneID::MENU:
+		bindScene<MenuScene>();
+		break;
+	case SceneID::GAME:
+		bindScene<GameScene>();
+		break;
+	}
 }
 
 void Application::mainLoop()

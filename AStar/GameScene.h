@@ -2,12 +2,14 @@
 #include <engine/Scene/Scene.h>
 #include <engine/Shapes/Shapes.h>
 
+#include "SceneID.h"
+
 #include "Board.h"
 
 class GameScene : public engine::Scene
 {
 public:
-	GameScene(const engine::SceneContext& sceneContext, const std::function<void()>& exitCallback);
+	GameScene(const engine::SceneContext& sceneContext, const std::function<void(SceneID nextScene)>& exitCallback);
 
 	void onEntry()           override;
 	void onExit()            override;
@@ -30,5 +32,5 @@ private:
 
 	glm::vec4 m_currentColor;
 
-	std::function<void()> m_exitCallback;
+	std::function<void(SceneID nextScene)> m_exitCallback;
 };

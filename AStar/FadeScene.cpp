@@ -4,10 +4,11 @@
 
 #define FADE_SPEED 0.0015f
 
-FadeScene::FadeScene(const engine::SceneContext& sceneContext, const std::function<void()>& fadeInCompleteCallback, const std::function<void()>& fadeOutCompleteCallback)
-	: engine::Scene(sceneContext), m_fadeInCompleteCallback(fadeInCompleteCallback), m_fadeOutCompleteCallback(fadeOutCompleteCallback)
+FadeScene::FadeScene(const engine::SceneContext& sceneContext, const std::function<void()>& fadeOutCompleteCallback)
+	: engine::Scene(sceneContext), m_fadeOutCompleteCallback(fadeOutCompleteCallback)
 {
 	m_shader.create("../Shaders/FadeShader.vert", "../Shaders/FadeShader.frag");
+	updateShaderTime();
 }
 
 void FadeScene::onEntry()
@@ -34,7 +35,6 @@ void FadeScene::onUpdate(double dT)
 			m_fading = false;
 			m_time = 0.0f;
 			updateShaderTime();
-			m_fadeInCompleteCallback();
 		}
 	}
 }
@@ -48,13 +48,13 @@ void FadeScene::onRender()
 
 void FadeScene::fadeIn()
 {
-	m_fading = true;
+	m_fading  = true;
 	m_timeMul = -1;
 }
 
 void FadeScene::fadeOut()
 {
-	m_fading = true;
+	m_fading  = true;
 	m_timeMul = 1;
 }
 

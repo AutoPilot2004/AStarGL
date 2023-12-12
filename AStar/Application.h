@@ -1,13 +1,8 @@
 #pragma once
 #include <engine/Application.h>
+#include "SceneID.h"
 
 class FadeScene;
-
-enum class ApplicationState
-{
-	ACTIVE,
-	IN_TRANSITION
-};
 
 class Application : public engine::Application
 {
@@ -16,7 +11,10 @@ public:
 	void mainLoop() override;
 
 private:
-	ApplicationState m_appState = ApplicationState::ACTIVE;
+	void changeScene(SceneID scene);
+
+private:
+	SceneID m_nextSceneID;
 
 	FadeScene* m_fadeScene = nullptr;
 };

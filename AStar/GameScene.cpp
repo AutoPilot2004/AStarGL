@@ -2,8 +2,9 @@
 
 #include <engine/Renderer/RenderCommand.h>
 #include <engine/Defaults.h>
+#include <engine/HF.h>
 
-#define BOARD_WIDTH  25
+#define BOARD_WIDTH  50
 #define BOARD_HEIGHT 50
 
 #define MOVE_SPEED   0.05f
@@ -12,48 +13,21 @@
 #define MAX_ZOOM_IN  5.0f
 #define MAX_ZOOM_OUT 40.0f
 
-#define BC_RED   0.2f
-#define BC_GREEN 0.2f
-#define BC_BLUE  0.2f
-#define BC_ALPHA 1.0f
-
 #define BOARD_COLOR glm::vec4{1.0f, 1.0f, 1.0f, 1.0f}
 #define START_COLOR glm::vec4{0.0f, 1.0f, 0.0f, 1.0f}
 #define END_COLOR   glm::vec4{1.0f, 0.0f, 0.0f, 1.0f}
 #define BLOCK_COLOR glm::vec4{0.5f, 0.5f, 0.5f, 1.0f}
 #define PATH_COLOR  glm::vec4{0.3f, 0.5f, 0.6f, 1.0f}
 
-namespace
-{
-	glm::vec2 screenToWorldSpace(const glm::vec2& pos, const glm::ivec2& screenWidthHeight, const glm::mat4& viewProjectionMatrix)
-	{
-		glm::vec2 finalPos;
-
-		const int& width = screenWidthHeight.x;
-		const int& height = screenWidthHeight.y;
-
-		finalPos.x = (pos.x / width)  * 2.0f - 1.0f;
-		finalPos.y = ((height - pos.y) / height) * 2.0f - 1.0f;
-
-		glm::vec4 temp = glm::inverse(viewProjectionMatrix) * glm::vec4(finalPos, 1.0f, 1.0f);
-
-		finalPos = { temp.x, temp.y };
-
-		return finalPos;
-	}
-}
-
-GameScene::GameScene(const engine::SceneContext& sceneContext, const std::function<void()>& exitCallback)
+GameScene::GameScene(const engine::SceneContext& sceneContext, const std::function<void(SceneID nextScene)>& exitCallback)
 	: engine::Scene(sceneContext), m_exitCallback(exitCallback)
 {
-	addCamera("MainCamera");
+	addCamera("Main");
+	setCamera("Main");
 }
 
 void GameScene::onEntry()
 {
-	engine::RenderCommand::setClearColor(BC_RED, BC_GREEN, BC_BLUE, BC_ALPHA);
-
-	setCamera("MainCamera");
 	getBoundCamera().projection.setFOV(10.0f);
 	getBoundCamera().transform.setTranslation({ (BOARD_WIDTH - 1) / 2.0f, (BOARD_HEIGHT - 1) / 2.0f, 0.0f });
 
@@ -115,7 +89,7 @@ void GameScene::updateBoard()
 
 	if (m_board.isCellEmpty(lastMousePos.x, lastMousePos.y)) m_board.unsetCell(lastMousePos.x, lastMousePos.y);
 
-	glm::vec2 worldMousePos = screenToWorldSpace(sceneContext.input->getMousePos(), engine::RenderCommand::getWindowSize(), getBoundCamera().getViewProjectionMatrix()) + 0.5f;
+	glm::vec2 worldMousePos = engine::HF::screenToWorldSpace(sceneContext.input->getMousePos(), engine::RenderCommand::getWindowSize(), getBoundCamera().getViewProjectionMatrix()) + 0.5f;
 	if (!(worldMousePos.x > 0.0f && worldMousePos.x < BOARD_WIDTH && worldMousePos.y > 0.0f && worldMousePos.y < BOARD_HEIGHT && !m_disableMouseInput)) return;
 
 	if (sceneContext.input->isMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
@@ -152,7 +126,7 @@ void GameScene::changeState()
 		}
 	}
 
-	if (sceneContext.input->isKeyPressed(KEY_ESCAPE)) m_exitCallback();
+	if (sceneContext.input->isKeyPressed(KEY_ESCAPE)) m_exitCallback(SceneID::MENU);
 }
 
 void GameScene::onUpdate(double dT)

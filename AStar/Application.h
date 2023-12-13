@@ -11,7 +11,7 @@ public:
 	void mainLoop() override;
 
 private:
-	void changeScene(SceneID scene);
+	void bindSceneWithID(SceneID scene);
 
 private:
 	SceneID m_nextSceneID;

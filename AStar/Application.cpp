@@ -30,14 +30,14 @@ void Application::init()
 
 	engine::RenderCommand::setClearColor(BC_RED, BC_GREEN, BC_BLUE, BC_ALPHA);
 
-	addScene<FadeScene>([&]() { changeScene(m_nextSceneID); m_fadeScene->fadeIn(); });
+	addScene<FadeScene>([&]() { bindSceneWithID(m_nextSceneID); m_fadeScene->fadeIn(); });
 	m_fadeScene = getScene<FadeScene>();
 	addScene<MenuScene>([&](SceneID nextScene) { m_nextSceneID = nextScene; m_fadeScene->fadeOut(); });
 	addScene<GameScene>([&](SceneID nextScene) { m_nextSceneID = nextScene; m_fadeScene->fadeOut(); });
 	bindScene<MenuScene>();
 }
 
-void Application::changeScene(SceneID scene)
+void Application::bindSceneWithID(SceneID scene)
 {
 	switch (scene) {
 	case SceneID::MENU:

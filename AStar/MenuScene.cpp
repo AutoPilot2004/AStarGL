@@ -36,10 +36,13 @@ void MenuScene::onUpdate(double dT)
 
 	if (!(wmp.x <= sc.x / 2.0f && wmp.x >= -sc.x / 2.0f && wmp.y <= sc.y / 2.0f && wmp.y >= -sc.y / 2.0f)) { m_button.color = BUTTON_COLOR; return; }
 
-	if (sceneContext.input->isMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+	if (sceneContext.input->isMouseButtonDown(MOUSE_BUTTON_LEFT)) {
 		m_button.color = BUTTON_HOVER_COLOR + glm::vec4{glm::vec3{0.2f}, 0.0f};
-		m_exitCallback(SceneID::GAME);
 		return;
+	}
+
+	if (sceneContext.input->isMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+		m_exitCallback(SceneID::GAME);
 	}
 
 	m_button.color = BUTTON_HOVER_COLOR;

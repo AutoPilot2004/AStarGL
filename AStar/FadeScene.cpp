@@ -2,12 +2,12 @@
 
 #include <engine/Renderer/RenderCommand.h>
 
-#define FADE_SPEED 0.0015f
+#define FADE_SPEED 0.0017f
 
 FadeScene::FadeScene(const engine::SceneContext& sceneContext, const std::function<void()>& fadeOutCompleteCallback)
 	: engine::Scene(sceneContext), m_fadeOutCompleteCallback(fadeOutCompleteCallback)
 {
-	m_shader.create("../Shaders/FadeShader.vert", "../Shaders/FadeShader.frag");
+	m_shader.create("Assets/Shaders/fstShader.vert", "Assets/Shaders/FadeShader.frag");
 	updateShaderTime();
 }
 

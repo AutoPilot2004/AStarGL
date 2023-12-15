@@ -126,7 +126,7 @@ void GameScene::changeState()
 		}
 	}
 
-	if (sceneContext.input->isKeyPressed(KEY_ESCAPE)) m_exitCallback(SceneID::MENU);
+	if (sceneContext.input->isKeyReleased(KEY_ESCAPE)) m_exitCallback(SceneID::MENU);
 }
 
 void GameScene::onUpdate(double dT)

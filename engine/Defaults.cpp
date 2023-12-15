@@ -5,8 +5,8 @@
 #include <unordered_map>
 
 #define QUAD_SHADER_ID 1
-#define QUAD_SHADER_VERT_PATH "../Shaders/QuadShader.vert"
-#define QUAD_SHADER_FRAG_PATH "../Shaders/QuadShader.frag"
+#define QUAD_SHADER_VERT_PATH "Assets/Shaders/QuadShader.vert"
+#define QUAD_SHADER_FRAG_PATH "Assets/Shaders/QuadShader.frag"
 
 namespace
 {

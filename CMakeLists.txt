@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.8)
-set(CMAKE_TOOLCHAIN_FILE "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
 set(CMAKE_CXX_STANDARD 23)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -15,10 +15,6 @@ find_package(glew REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(spdlog CONFIG REQUIRED)
 find_package(Stb REQUIRED)
-
-add_executable(som main.cpp)
-
-target_link_libraries(som PRIVATE engine)
 
 add_subdirectory("engine")
 add_subdirectory("AStar")

@@ -22,12 +22,12 @@ namespace engine
 {
 	enum class LOG_LEVEL
 	{
-		OFF =       spdlog::level::level_enum::off,
-		TRACE =     spdlog::level::level_enum::trace,
-		INFO =      spdlog::level::level_enum::info,
-		WARN =      spdlog::level::level_enum::warn,
-		ERROR =     spdlog::level::level_enum::err,
-		CRITICAL =  spdlog::level::level_enum::critical
+		OFF      = spdlog::level::level_enum::off,
+		TRACE    = spdlog::level::level_enum::trace,
+		INFO     = spdlog::level::level_enum::info,
+		WARN     = spdlog::level::level_enum::warn,
+		ERROR    = spdlog::level::level_enum::err,
+		CRITICAL = spdlog::level::level_enum::critical
 	};
 
 	namespace Logger

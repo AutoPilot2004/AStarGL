@@ -11,7 +11,7 @@ target_link_libraries(${app_name} PRIVATE engine)
 copy_assets(${app_name})
 
 add_custom_command(TARGET ${app_name} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/AStar/Assets" ${CMAKE_CURRENT_BINARY_DIR}/Assets
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/AStar/Assets" $<TARGET_FILE_DIR:${app_name}>/Assets
   COMMAND_EXPAND_LISTS
   )
 

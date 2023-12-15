@@ -12,7 +12,7 @@ target_link_libraries(${ENGINE_NAME} PUBLIC glfw GLEW::GLEW glm::glm spdlog::spd
 
 function(copy_assets target_name)
 add_custom_command(TARGET ${target_name} POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/engine/Assets" ${CMAKE_CURRENT_BINARY_DIR}/Assets
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/engine/Assets" $<TARGET_FILE_DIR:${target_name}>/Assets
   COMMAND_EXPAND_LISTS
   )
 endfunction()

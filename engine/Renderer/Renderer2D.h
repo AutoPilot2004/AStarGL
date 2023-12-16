@@ -26,7 +26,7 @@ namespace engine
 
 		struct SSBOData
 		{
-			void drawShape(const Shape& shape, const auto& textureMap, bool isRect);
+			void drawShape(const Shape& shape, bool isRect);
 			void fillSSBO();
 			void render(const glm::mat4& viewProj);
 
@@ -45,8 +45,7 @@ namespace engine
 	class Renderer2D
 	{
 	public:
-		Renderer2D(TextureManager& textureManager);
-		~Renderer2D();
+		Renderer2D();
 
 		void beginScene(Camera2D* camera);
 		void endScene();
@@ -62,7 +61,7 @@ namespace engine
 		Renderer2D& operator=(Renderer2D&&) = delete;
 
 	private:
-		void init(TextureManager& textureManager);
+		void init();
 		void restart();
 
 		void renderScene();
@@ -75,10 +74,6 @@ namespace engine
 
 		_impl::SSBOData m_staticSSBO;
 		_impl::SSBOData m_dynamicSSBO;
-
-		ShaderStorageBuffer m_textureSSBO;
-		std::vector<GLuint64> m_textureHandles;
-		std::unordered_map<GLuint64, uint32_t> m_textureMap;
 
 		Camera2D* m_boundCamera = nullptr;
 

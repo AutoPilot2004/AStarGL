@@ -13,7 +13,7 @@ namespace engine
 	struct ApplicationContext
 	{
 		TextureManager textureManager;
-		Renderer2D     renderer2D = textureManager;
+		Renderer2D     renderer2D;
 	};
 
 	struct SceneContext

@@ -13,9 +13,9 @@ namespace engine
 {
 	namespace _impl
 	{
-		void SSBOData::drawShape(const Shape& shape, const auto& textureMap, bool isRect)
+		void SSBOData::drawShape(const Shape& shape, bool isRect)
 		{
-			quadsMap[shape.shader].emplace_back(glm::vec4{ shape.transform.translation, shape.texture.textureInfo ? textureMap.at(shape.texture.textureInfo->handle) : 0 },
+			quadsMap[shape.shader].emplace_back(glm::vec4{ shape.transform.translation, 0 },
 												glm::vec4{ shape.transform.rotation,
 												isRect ? static_cast<const Rect&>(shape).transform.scale : glm::vec2{ static_cast<const Circle&>(shape).radius },
 												isRect ? static_cast<const Rect&>(shape).rounding : 1.0f },
@@ -48,18 +48,12 @@ namespace engine
 		}
 	}
 
-	Renderer2D::Renderer2D(TextureManager& textureManager)
+	Renderer2D::Renderer2D()
 	{
-		init(textureManager);
+		init();
 	}
 
-	Renderer2D::~Renderer2D()
-	{
-		for (auto handle : m_textureHandles)
-			glMakeTextureHandleNonResidentARB(handle);
-	}
-
-	void Renderer2D::init(TextureManager& textureManager)
+	void Renderer2D::init()
 	{
 		m_dynamicSSBO.ssbo.allocStaticForDraw<BufferFlags::DYNAMIC_STORAGE>(MAX_SIZE_FOR(_impl::Quad));
 
@@ -77,18 +71,6 @@ namespace engine
 		m_vao.bind();
 		m_ebo.bind();
 		m_ebo.allocStaticForDrawAndFill<BufferFlags::NONE>(indices.size() * sizeof(indices[0]), indices.data());
-
-		uint32_t texIdx = 1;
-		
-		m_textureHandles.push_back(textureManager.getWhiteTextureInfo()->handle);
-		for (const auto& [str, texInfo] : textureManager.getTextureMap()) {
-			glMakeTextureHandleResidentARB(texInfo.handle);
-			m_textureHandles.push_back(texInfo.handle);
-			m_textureMap[texInfo.handle] = texIdx++;
-		}
-
-		m_textureSSBO.allocStaticForDrawAndFill<BufferFlags::NONE>(m_textureHandles.size() * sizeof(m_textureHandles[0]), m_textureHandles.data());
-		m_textureSSBO.bindBase(1);
 	}
 	
 	void Renderer2D::restart()
@@ -149,14 +131,14 @@ namespace engine
 			if (m_staticUploaded)                          { WARN_LOG("Static Data cannot be modified!\n") return; }
 			if (m_staticSSBO.totalSize >= MAX_QUADS_COUNT) { WARN_LOG("Max Quad Count Reached!\n")         return; }
 
-			m_staticSSBO.drawShape(shape, m_textureMap, isRect);
+			m_staticSSBO.drawShape(shape, isRect);
 
 			return;
 		}
 
 		if (m_dynamicSSBO.totalSize >= MAX_DYNAMIC_SSBO_COUNT) restart();
 
-		m_dynamicSSBO.drawShape(shape, m_textureMap, isRect);
+		m_dynamicSSBO.drawShape(shape, isRect);
 	}
 
 	void Renderer2D::drawRect(const Rect& rect, bool isStatic /* = false */)

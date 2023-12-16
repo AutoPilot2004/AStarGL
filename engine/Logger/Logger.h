@@ -12,11 +12,11 @@
 	#define GET_LOG() spdlog::get(APPLICATION_NAME)
 #endif
 
-#define TRACE_LOG(x, ...)     GET_LOG()->trace(x,##__VA_ARGS__);
-#define INFO_LOG(x, ...)      GET_LOG()->info(x,##__VA_ARGS__);
-#define WARN_LOG(x, ...)      GET_LOG()->warn(x,##__VA_ARGS__);
-#define ERROR_LOG(x, ...)     GET_LOG()->error(x,##__VA_ARGS__);
-#define CRITICAL_LOG(x, ...)  GET_LOG()->critical(x,##__VA_ARGS__);
+#define TRACE_LOG(x, ...)     GET_LOG()->trace(x __VA_OPT__(,) __VA_ARGS__);
+#define INFO_LOG(x, ...)      GET_LOG()->info(x __VA_OPT__(,) __VA_ARGS__);
+#define WARN_LOG(x, ...)      GET_LOG()->warn(x __VA_OPT__(,) __VA_ARGS__);
+#define ERROR_LOG(x, ...)     GET_LOG()->error(x __VA_OPT__(,) __VA_ARGS__);
+#define CRITICAL_LOG(x, ...)  GET_LOG()->critical(x __VA_OPT__(,) __VA_ARGS__);
 
 namespace engine
 {

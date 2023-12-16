@@ -1,5 +1,4 @@
 #version 430 core
-#extension GL_ARB_bindless_texture : require
 
 const vec2 quadLocalVertexTranslation[4] = vec2[](
 									vec2(-0.5, -0.5),

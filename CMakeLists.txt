@@ -10,6 +10,10 @@ endif()
 
 project ("AStarGL")
 
+if (MSVC)
+	add_compile_options(/Zc:preprocessor)
+endif()
+
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glew REQUIRED)
 find_package(glm CONFIG REQUIRED)

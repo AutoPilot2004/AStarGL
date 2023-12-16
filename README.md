@@ -1,6 +1,6 @@
 # How to build #
 
-To build this project you will need [vcpkg](https://vcpkg.io/) and [cmake](https://cmake.org/) (minimum version required is 3.8.0)
+To build this project you will need [vcpkg](https://vcpkg.io/) and [cmake](https://cmake.org/) (minimum version required is 3.27.0)
 
 ```shell
 

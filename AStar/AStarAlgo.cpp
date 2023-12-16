@@ -1,5 +1,7 @@
 #include "AStarAlgo.h"
 
+#include <cmath>
+
 using Node = impl::Node;
 
 void AStarAlgo::reset(uint32_t width, uint32_t height)
